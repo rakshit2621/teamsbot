@@ -1,16 +1,16 @@
-// messageHandler/handleIncomingMessage.js
-
 const config = require("../config/filteredconfig");
 
 function handleIncomingMessage(activity) {
-  const { from, text, channelId, conversation, team, channelData } = activity;
+  const { text, channelData } = activity;
 
   const teamId = channelData?.team?.id;
   const channel = channelData?.channel;
 
-  // Validate the teamId and channel.id are allowed
-  const teamEntry = config.teams.find((t) => t.id === teamId);
-  const channelAllowed = teamEntry?.channels.find((c) => c.id === channel.id);
+  const teamEntry = config.allowedTeams.find((t) => t.id === teamId);
+
+  const channelAllowed = teamEntry?.allowedChannels.find(
+    (c) => c.id === channel.id
+  );
 
   if (!teamEntry || !channelAllowed) {
     console.log("🔒 Ignoring message from unauthorized team/channel.");
